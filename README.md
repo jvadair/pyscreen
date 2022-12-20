@@ -1,5 +1,4 @@
-![PyScreen Logo](https://gitlab.com/jvadair/pyscreen/-/raw/master/logo.png)
-
+![PyScreen Logo](https://gitlab.com/jvadair/pyscreen/-/raw/master/banner.png)
 # PyScreen
 A simple python wrapper for GNU Screen
 
