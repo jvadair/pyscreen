@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='python-screen',
-    version='1.0.0',
+    version='1.0.1',
     packages=['pyscreen'],
     url='https://gitlab.com/jvadair/pyscreen',
     license='Apache 2.0',
