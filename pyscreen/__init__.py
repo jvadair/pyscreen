@@ -15,7 +15,7 @@ class Screen:
             raise ScreenNotFound(f"No screen with pid {pid}")
         self.pid = pid
 
-    def self_destruct(self):
+    def __del__(self):  # Destroy screen process when object deleted
         kill(self.pid)
 
     def send(self, command: str, end="\r") -> None:
@@ -34,6 +34,7 @@ def create(name, shell=os.environ['SHELL'], logfile=None, title=None) -> Screen:
         command.append('-t')
         command.append(title)
     process = subprocess.Popen(command)
+    while not process.pid: pass
     return Screen(process.pid)
 
 def kill(pid):
