@@ -1,4 +1,4 @@
-__all__ = ['Screen', 'create', 'kill']
+__all__ = ['Screen', 'create', 'kill', 'exists', 'ls']
 
 import os, signal
 import subprocess

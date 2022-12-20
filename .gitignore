@@ -1,0 +1,6 @@
+/.pypirc
+/release.sh
+/venv
+/pyscreen.egg-info/
+/dist/
+/python_screen.egg-info/
