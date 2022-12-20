@@ -3,7 +3,7 @@ __all__ = ['Screen', 'create', 'kill', 'exists', 'ls']
 import os, signal
 import subprocess
 from datetime import datetime
-from .errors import *
+from pyscreen.errors import *
 
 class Screen:
     def __init__(self, pid):
