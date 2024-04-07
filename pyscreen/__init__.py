@@ -58,7 +58,8 @@ def ls() -> dict:
         process = item[0].split('.')
         pid = process[0]
         final[pid] = {'name': process[1]}  # final: {pid:{...}, ... }
-        final[pid]['time'] = datetime.strptime(item[1], '%m/%d/%Y %X %p')
+        # final[pid]['time'] = datetime.strptime(item[1], '%m/%d/%Y %X %p')  # This will break on some systems
+    
     return final
 
 
