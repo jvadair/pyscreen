@@ -6,7 +6,7 @@ from datetime import datetime
 from pyscreen.errors import *
 
 class Screen:
-    def __init__(self, pid):
+    def __init__(self, pid, close_on_del=False):
         """
         :param pid: The process ID of the screen
         Creates a new Screen object
@@ -14,9 +14,11 @@ class Screen:
         if not exists(pid):
             raise ScreenNotFound(f"No screen with pid {pid}")
         self.pid = pid
+        self.close_on_del=close_on_del
 
     def __del__(self):  # Destroy screen process when object deleted
-        kill(self.pid)
+        if self.close_on_del:
+            kill(self.pid)
 
     def send(self, command: str, end="\r") -> None:
         """
@@ -24,8 +26,27 @@ class Screen:
         :param end: Appended to the end of the command - the default value is a carriage return
         """
         os.system(f'screen -S {self.pid} -X stuff {command}{end}')
+    
+    def enable_logging(self):
+        """
+        Enables logging to a temporary file
+        """
+        os.system(f'screen -S {self.pid} -X logfile /tmp/pyscreen-{self.pid}.log')
+    
+    def get_log(self, readlines=False):
+        with open(f'/tmp/pyscreen-{self.pid}.log', 'r') as log_file:
+            if readlines:
+                return log_file.readlines()
+            else:
+                log_text = log_file.read()
+        with open(f'/tmp/pyscreen-{self.pid}.log', 'w') as log_file:
+            log_file.write('')
+            log_file.truncate()
+        return log_text
+        
 
-def create(name, shell=os.environ['SHELL'], logfile=None, title=None) -> Screen:
+
+def create(name, shell=os.environ['SHELL'], logfile=None, title=None, close_on_del=True) -> Screen:
     command = ["screen", "-DmS", name, '-s', shell]
     if logfile:
         command.append('-Logfile')
@@ -35,7 +56,7 @@ def create(name, shell=os.environ['SHELL'], logfile=None, title=None) -> Screen:
         command.append(title)
     process = subprocess.Popen(command)
     while not process.pid: pass
-    return Screen(process.pid)
+    return Screen(process.pid, close_on_del=close_on_del)
 
 def kill(pid):
     os.kill(pid, signal.SIGTERM)
@@ -61,5 +82,3 @@ def ls() -> dict:
         # final[pid]['time'] = datetime.strptime(item[1], '%m/%d/%Y %X %p')  # This will break on some systems
     
     return final
-
-
